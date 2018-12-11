@@ -126,7 +126,7 @@
                     }
 
                     if (siteverified === true) {
-                        $("#output").html("Your site is verified!");
+                        $("#output").html($("#website-url").val() + " is verified!");
                     } else {
                         $("#output").html("Oops!<br>" + $("#website-url").val() + " isn't verified yet.<br>Create a TXT entry in the DNS settings of <br> <code>" + $("#website-url").val() + "</code> with the following settings: <br><br> Name: <code>" + $("#website-url").val() + "</code><br>Value: <code>" + passcode + "=" + CryptoJS.AES.encrypt($("#website-url").val(), passcode) + "</code><br><br>After completing the above steps, run the test again in a few minutes.");
                     }
