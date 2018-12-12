@@ -106,7 +106,7 @@
 
         document.getElementById("website-url").addEventListener("input", function() {
             var passcode = $("#verification-keyword").val();
-            if (document.getElementById("website-url").validity.valid) {
+            if (document.getElementById("website-url").validity.valid && document.getElementById("verification-keyword").validity.valid) {
                 $("#progress-bar").removeClass("mdc-linear-progress--closed");
                 $.when($.getJSON("https://dns.google.com/resolve", {
                     name: $("#website-url").val(),
