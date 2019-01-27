@@ -13,7 +13,7 @@
 
     <link rel="shortcut icon" href="favicon.ico">
 
-    <link rel='stylesheet' href='https://unpkg.com/material-components-web@0.42.0/dist/material-components-web.min.css'>
+    <link rel='stylesheet' href='https://unpkg.com/material-components-web@0.43.1/dist/material-components-web.min.css'>
 
     <style>
         :root {
@@ -24,20 +24,38 @@
         }
         
         :root body {
+            background-color: #fafafa;
+        }
+        
+        :root body .ribbon {
+            top: 0;
+            z-index: -1;
             background-color: #3f51b5;
+            width: 100%;
+            height: 10rem;
+            position: absolute;
         }
         
         :root body main {
             background-color: #ffffff;
             border-radius: 4px;
-            position: absolute;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            margin-left: 20px;
-            margin-right: 20px;
+            margin: 20px;
+            padding: 20px;
             min-width: calc(100vw - 80px);
             min-height: calc(100vh - 80px);
-            padding: 20px;
+        }
+        
+        :root body main #randomise-token {
+            margin-top: 4px;
+            margin-right: 4px;
+        }
+        
+        :root body main .mdc-text-field {
+            width: 100%;
+        }
+        
+        :root body main code {
+            background-color: #e0e0e0;
         }
     </style>
 
@@ -48,8 +66,9 @@
 
 <body>
 
-    <main class="mdc-typography">
-        <h1 class="mdc-typography--headline1">ROS Site Verification</h1>
+    <div class="ribbon mdc-elevation--z4"></div>
+    <main class="mdc-typography mdc-elevation--z8">
+        <h1 class="mdc-typography--headline2">ROS Site Verification</h1>
         <p class="mdc-typography--body1">This is an easy way to prove that you own a site by adding a TXT record to your website's DNS records.</p>
         <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
             <input type="text" pattern="^(?!https?).*$" id="website-url" class="mdc-text-field__input" required>
@@ -63,7 +82,7 @@
         </div>
         <br>
         <br>
-        <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+        <div id="verification-keyword-div" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
             <input type="text" id="verification-keyword" class="mdc-text-field__input" value="ros-site-verification" required>
             <div class="mdc-notched-outline">
                 <div class="mdc-notched-outline__leading"></div>
@@ -71,14 +90,16 @@
                     <label for="verification-keyword" class="mdc-floating-label">Verification Keyword</label>
                 </div>
                 <div class="mdc-notched-outline__trailing"></div>
+
             </div>
+            <button id="randomise-token" class="mdc-icon-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" d="M0 0h24v24H0V0z" />
+                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                </svg>
+            </button>
         </div>
-        <button id="randomise-token" class="mdc-icon-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                <path fill="none" d="M0 0h24v24H0V0z" />
-                <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
-            </svg>
-        </button>
+
         <br>
         <br>
         <div role="progressbar" id="progress-bar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed">
@@ -92,66 +113,82 @@
             </div>
         </div>
         <p id="output" class="mdc-typography--body1"></p>
+
     </main>
 
     <script async src='https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js'></script>
-    <script src='https://unpkg.com/material-components-web@0.42.0/dist/material-components-web.min.js'></script>
+    <script src='https://unpkg.com/material-components-web@0.43.1/dist/material-components-web.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js'></script>
 
     <script>
-        "use strict";
-
         window.mdc.autoInit();
 
-        document.getElementById("website-url").addEventListener("input", function() {
+        function handleSearch() {
             var passcode = $("#verification-keyword").val();
-            if (document.getElementById("website-url").validity.valid && document.getElementById("verification-keyword").validity.valid) {
+            if (
+                document.getElementById("website-url").validity.valid &&
+                document.getElementById("verification-keyword").validity.valid) {
                 $("#progress-bar").removeClass("mdc-linear-progress--closed");
-                $.when($.getJSON("https://dns.google.com/resolve", {
-                    name: $("#website-url").val(),
-                    type: "TXT"
-                }, function(data) {
-                    var siteverified = false;
+                $.when(
+                    $.getJSON(
+                        "https://dns.google.com/resolve", {
+                            name: $("#website-url").val(),
+                            type: "TXT"
+                        },
 
-                    for (var i = 0; i < data.Answer.length; i++) {
-                        try {
-                            if (CryptoJS.AES.decrypt(data.Answer[i].data.substring(1, data.Answer[i].data.length - 1).split("=")[1], passcode).toString(CryptoJS.enc.Utf8) === $("#website-url").val()) {
-                                siteverified = true;
-                                break;
+                        function(_ref) {
+                            var Answer = _ref.Answer;
+                            var siteverified = false;
+                            for (var i = 0; i < Answer.length; i++) {
+                                if (window.CP.shouldStopExecution(0)) break;
+                                try {
+                                    if (
+                                        CryptoJS.AES.decrypt(
+                                            Answer[i].data.substring(1, Answer[i].data.length - 1).split("=")[1],
+                                            passcode).toString(CryptoJS.enc.Utf8) === $("#website-url").val()) {
+                                        siteverified = true;
+                                        break;
+                                    }
+                                } catch (error) {
+                                    console.warn(error);
+                                }
                             }
-                        } catch (error) {
-                            console.warn(error);
-                        }
-                    }
+                            window.CP.exitedLoop(0);
+                            if (siteverified === true) {
+                                $("#output").html("<code>" +
+                                    $("#website-url").val() + "</code> is verified!");
 
-                    if (siteverified === true) {
-                        $("#output").html($("#website-url").val() + " is verified!");
-                    } else {
-                        $("#output").html("Oops!<br>" + $("#website-url").val() + " isn't verified yet.<br>Create a TXT entry in the DNS settings of <br> <code>" + $("#website-url").val() + "</code> with the following settings: <br><br> Name: <code>" + $("#website-url").val() + "</code><br>Value: <code>" + passcode + "=" + CryptoJS.AES.encrypt($("#website-url").val(), passcode) + "</code><br><br>After completing the above steps, run the test again in a few minutes.");
-                    }
-                })).then($("#progress-bar").addClass("mdc-linear-progress--closed"));
+                            } else {
+                                $("#output").html("Oops!<br><code>" +
+                                    $(
+                                        "#website-url").val() + "</code> isn't verified yet.<br>Create a TXT entry in the DNS settings of <code>" + $(
+                                        "#website-url").val() + "</code> with the following settings: <br><br> Name: <code>" + $(
+                                        "#website-url").val() + "</code><br>Value: <code>" + passcode + "=" + CryptoJS.AES.encrypt(
+                                        $("#website-url").val(),
+                                        passcode) + "</code><br><br>After completing the above steps, run the test again in a few minutes.");
+
+                            }
+                        })).
+
+                then($("#progress-bar").addClass("mdc-linear-progress--closed"));
             }
+        }
+
+        $("#website-url").on("input", function() {
+            handleSearch();
         });
 
-        document.getElementById("verification-keyword").addEventListener("input", function() {
-            var event = document.createEvent("Event");
-            event.initEvent("input", true, true);
-            document.getElementById("website-url").dispatchEvent(event);
-        });
-
-        document.getElementById("randomise-token").addEventListener("click", function() {
+        $("#randomise-token").click(function() {
             var text = "";
             var possible = "abcdefghijklmnopqrstuvwxyz";
-
             for (var i = 0; i < 20; i++) {
+                if (window.CP.shouldStopExecution(1)) break;
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
             }
-            $("#verification-keyword").val(text);
-
-            var event = document.createEvent("Event");
-            event.initEvent("input", true, true);
-            document.getElementById("website-url").dispatchEvent(event);
+            window.CP.exitedLoop(1);
+            document.getElementById("verification-keyword-div").MDCTextField.value = text;
+            handleSearch();
         });
     </script>
 
