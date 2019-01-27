@@ -113,7 +113,23 @@
             </div>
         </div>
         <p id="output" class="mdc-typography--body1"></p>
-
+        <h2 class="mdc-typography--headline3">API Usage</h2>
+        <h3 class="mdc-typography--headline4">Check an MD5 hash</h3>
+        <p class="mdc-typography--body1"><strong>Endpoint</strong>: <code class="code">https://script.google.com/macros/s/AKfycbyUmWUXUdGl2RlXBHtCfjBZFevt1g0UHoDbfst6ClOu5xJnuMuh/exec</code></p>
+        <p class="mdc-typography--body1">This endpoint checks if the provided MD5 hash is in the list.</p>
+        <p class="mdc-typography--body1"><strong>Type</strong>: <code class="code">GET</code></p>
+        <p class="mdc-typography--body1"><strong>Parameters</strong>:</p>
+        <p class="mdc-typography--body1"><code class="code">url</code>: The url to check.</p>
+        <p class="mdc-typography--body1"><code class="code">keyword</code>: The keyword to use when checking.</p>
+        <p class="mdc-typography--body1"><code class="code">callback</code>: An optional JSONP callback.</p>
+        <p class="mdc-typography--body1"><strong>Example output</strong>:</p>
+        <code class="code">
+{"success": true, "type": 200, "verified": false, "name": "example.com", "value": "U2FsdGVkX1/B5JpOTSL8C3EgdvRjNGSfWuIzrkNnEoA="}
+  </code>
+        <p class="mdc-typography--body1"><strong>Example failed output</strong>:</p>
+        <code class="code">
+  {"success": false, "type": 400, "message": "The url parameter was not provided."}
+  </code>
     </main>
 
     <script async src='https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js'></script>
