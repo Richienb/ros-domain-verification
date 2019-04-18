@@ -157,7 +157,6 @@
                             var Answer = _ref.Answer;
                             var siteverified = false;
                             for (var i = 0; i < Answer.length; i++) {
-                                if (window.CP.shouldStopExecution(0)) break;
                                 try {
                                     if (
                                         CryptoJS.AES.decrypt(
@@ -199,7 +198,6 @@
             var text = "";
             var possible = "abcdefghijklmnopqrstuvwxyz";
             for (var i = 0; i < 20; i++) {
-                if (window.CP.shouldStopExecution(1)) break;
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
             }
             window.CP.exitedLoop(1);
