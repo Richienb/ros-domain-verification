@@ -8,202 +8,593 @@
 
     <meta name="theme-color" content="#3F51B5">
 
-    <title>ROS Site Verification</title>
-    <meta name="description" content="This is an easy way to prove that you own a site by adding a TXT record to your website's DNS records.">
+    <title>ROS Domain Verification</title>
+    <meta name="description" content="A simple gitattributes generator that leverages alexkaratarakis/gitattributes.">
 
     <link rel="shortcut icon" href="favicon.ico">
 
-    <link rel='stylesheet' href='https://unpkg.com/material-components-web@0.43.1/dist/material-components-web.min.css'>
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@1.1.1/dist/material-components-web.min.css">
 
     <style>
-        :root {
+        body {
             --mdc-theme-primary: #3f51b5;
             --mdc-theme-secondary: #f44336;
-            --mdc-theme-on-primary: #ffffff;
-            --mdc-theme-on-secondary: #ffffff;
-        }
-        
-        :root body {
             background-color: #fafafa;
         }
-        
-        :root body .ribbon {
+
+        body .ribbon {
             top: 0;
             z-index: -1;
-            background-color: #3f51b5;
+            background-color: var(--mdc-theme-primary, #6200ee);
             width: 100%;
             height: 10rem;
             position: absolute;
         }
-        
-        :root body main {
-            background-color: #ffffff;
+
+        body .main-content {
+            background-color: white;
             border-radius: 4px;
-            margin: 20px;
-            padding: 20px;
-            min-width: calc(100vw - 80px);
-            min-height: calc(100vh - 80px);
+            margin: 1.5rem;
+            padding: 2rem;
+            min-height: calc(100vh - 7rem);
         }
-        
-        :root body main #randomise-token {
-            margin-top: 4px;
-            margin-right: 4px;
+
+        body .main-content .mdc-button.mdc-button--raised {
+            background-color: var(--mdc-theme-secondary, #018786);
         }
-        
-        :root body main .mdc-text-field {
+
+        body .main-content .theme-toggle {
+            position: absolute;
+            top: 0.5rem;
+            right: 3rem;
+        }
+
+        body .main-content a {
+            color: #3f51b5;
+        }
+
+        body .main-content::-moz-selection {
+            background-color: #3f51b5;
+            color: white;
+        }
+
+        body .main-content::selection {
+            background-color: #3f51b5;
+            color: white;
+        }
+
+        body .main-content .gen__url,
+        body .main-content .gen__keyword {
             width: 100%;
         }
-        
-        :root body main code {
+
+        body .main-content .gen__progress {
+            position: absolute;
+            bottom: 0;
+        }
+
+        body .main-content .gen__list,
+        body .main-content .gen__getvmessage {
+            display: none;
+        }
+
+        body .main-content .darken {
             background-color: #e0e0e0;
+        }
+
+        body .main-content .gen__genkeyword {
+            top: 4px;
+            right: 4px;
+        }
+
+        body .main-content #carbonads {
+            margin-bottom: 1rem;
+            float: right;
+            border-radius: 6px;
+            box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+            font-family: Roboto, sans-serif;
+            line-height: 28px;
+            padding: 8px;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media only screen and (max-width: 425px) {
+            body .main-content #carbonads {
+                width: 100%;
+            }
+        }
+
+        body .main-content #carbonads:hover {
+            box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+        }
+
+        body .main-content #carbonads .carbon-wrap .carbon-img > img {
+            margin-right: 9px;
+            float: left;
+        }
+
+        @media only screen and (max-width 400px) {
+            body .main-content #carbonads .carbon-wrap .carbon-img > img {
+                width: auto;
+                max-width: 130px;
+                height: 50px;
+            }
+        }
+
+        body .main-content #carbonads .carbon-wrap .carbon-text {
+            color: #637381;
+            font-weight: 300;
+            display: block;
+            font-size: 12px;
+            line-height: 15.96px;
+            margin-bottom: 0;
+            margin-top: 8px;
+            text-decoration: none;
+        }
+
+        body .main-content #carbonads .carbon-poweredby {
+            color: #c5cdd0;
+            font-size: 8px;
+            font-weight: 500;
+            line-height: 10px;
+            text-transform: uppercase;
+            text-decoration: none;
+        }
+
+        body.setting--dark {
+            background-color: #212121 !important;
+            --mdc-theme-text-primary-on-background: white;
+            --mdc-theme-text-secondary-on-background: white;
+            --mdc-theme-text-icon-on-background: white;
+        }
+
+        body.setting--dark::-webkit-scrollbar {
+            background-color: #505050;
+        }
+
+        body.setting--dark .main-content {
+            color: white;
+            background-color: #303030;
+        }
+
+        body.setting--dark .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input,
+        body.setting--dark .mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
+            color: white;
+        }
+
+        body.setting--dark .mdc-text-field--outlined:not(.mdc-text-field--disabled),
+        body.setting--dark .mdc-text-field--outlined:not(.mdc-text-field--disabled),
+        body.setting--dark .mdc-text-field--outlined:not(.mdc-text-field--disabled),
+        body.setting--dark .mdc-notched-outline__trailing {
+            border-color: white;
+        }
+
+        body.setting--dark .mdc-icon-button__icon {
+            fill: white;
+        }
+
+        body.setting--dark #carbonads .carbon-text {
+            color: white !important;
+        }
+
+        body.setting--dark a {
+            color: #5c6bc0;
+        }
+
+        body.setting--dark::-moz-selection {
+            background-color: #c5cae9;
+            color: black;
+        }
+
+        body.setting--dark::selection {
+            background-color: #c5cae9;
+            color: black;
+        }
+
+        body.setting--animate-colours {
+            transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.setting--animate-colours .main-content,
+        body.setting--animate-colours a,
+        body.setting--animate-colours::-moz-selection {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition-property: background-color, color;
+        }
+
+        body.setting--animate-colours .main-content,
+        body.setting--animate-colours a,
+        body.setting--animate-colours::selection {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition-property: background-color, color;
+        }
+
+        body::-webkit-scrollbar {
+            border-radius: 100px;
+            background-color: transparent;
+            width: 8px;
+            height: 8px;
+            overflow: visible;
+        }
+
+        body::-webkit-scrollbar-button {
+            height: 0;
+            width: 0;
+        }
+
+        body::-webkit-scrollbar-corner {
+            background-color: transparent;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 100px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: solid transparent;
+            border-width: 1px 1px 1px 6px;
+            min-height: 28px;
+            padding: 100px 0 0;
+        }
+
+        body::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        body::-webkit-scrollbar-thumb:active {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        body::-webkit-scrollbar-track {
+            background-clip: padding-box;
+            border: solid transparent;
+            border-width: 0 0 0 4px;
         }
     </style>
 
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500'>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
 
 </head>
 
 <body>
-
     <div class="ribbon mdc-elevation--z4"></div>
-    <main class="mdc-typography mdc-elevation--z8">
-        <h1 class="mdc-typography--headline2">ROS Site Verification</h1>
-        <p class="mdc-typography--body1">This is an easy way to prove that you own a site by adding a TXT record to your website's DNS records.</p>
-        <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
-            <input type="text" pattern="^(?!https?).*$" id="website-url" class="mdc-text-field__input" required>
-            <div class="mdc-notched-outline">
-                <div class="mdc-notched-outline__leading"></div>
-                <div class="mdc-notched-outline__notch">
-                    <label for="website-url" class="mdc-floating-label">Website URL</label>
+    <main class="main-content mdc-typography mdc-elevation--z8">
+        <script async src="https://cdn.carbonads.com/carbon.js?serve=CK7I6K3E&amp;placement=wwwrichie-bendallml" id="_carbonads_js"></script>
+        <button class="theme-toggle mdc-fab mdc-fab--mini" aria-label="Toggle theme" data-mdc-auto-init="MDCRipple">
+            <svg class="theme-toggle__svg mdc-fab__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="none" d="M0 0h24v24H0V0z" />
+                <path d="M11 7l-3.2 9h1.9l.7-2h3.2l.7 2h1.9L13 7h-2zm-.15 5.65L12 9l1.15 3.65h-2.3zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48z" />
+            </svg>
+        </button>
+        <h1 class="mdc-typography--headline2">ROS Domain Verification</h1>
+        <p class="mdc-typography--body1">This is an easy way to prove that you own a domain by adding a TXT record to your website's DNS records.</p>
+        <form class="gen__form" action="#" autocomplete="off">
+            <div class="gen__url mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+                <input type="text" pattern="^(?!https?).+$" id="tf-outlined-a" class="mdc-text-field__input" required>
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label for="tf-outlined-a" class="mdc-floating-label">Website URL</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
                 </div>
-                <div class="mdc-notched-outline__trailing"></div>
             </div>
-        </div>
-        <br>
-        <br>
-        <div id="verification-keyword-div" class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
-            <input type="text" id="verification-keyword" class="mdc-text-field__input" value="ros-site-verification" required>
-            <div class="mdc-notched-outline">
-                <div class="mdc-notched-outline__leading"></div>
-                <div class="mdc-notched-outline__notch">
-                    <label for="verification-keyword" class="mdc-floating-label">Verification Keyword</label>
+            <br>
+            <br>
+            <div class="gen__keyword mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+                <input type="text" id="tf-outlined-b" class="mdc-text-field__input" value="ros-domain-verification" required>
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading"></div>
+                    <div class="mdc-notched-outline__notch">
+                        <label for="tf-outlined-b" class="mdc-floating-label mdc-floating-label--float-above">Verification Keyword</label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing"></div>
                 </div>
-                <div class="mdc-notched-outline__trailing"></div>
-
+                <button class="gen__genkeyword mdc-icon-button" type="button" title="Generate random verification keyword" aria-hidden="true" aria-pressed="true" data-mdc-auto-init="MDCRipple">
+                    <svg class="mdc-icon-button__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="none" d="M0 0h24v24H0V0z" />
+                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                    </svg>
+                </button>
             </div>
-            <button id="randomise-token" class="mdc-icon-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <br>
+            <br>
+            <button class="gen__verify mdc-button mdc-button--raised" type="submit" data-mdc-auto-init="MDCRipple">
+                <svg class="mdc-button__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                     <path fill="none" d="M0 0h24v24H0V0z" />
-                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z" />
                 </svg>
+                <span class="mdc-button__label">Verify Domain</span>
+                <div role="progressbar" class="gen__progress mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" data-mdc-auto-init="MDCLinearProgress">
+                    <div class="mdc-linear-progress__buffering-dots"></div>
+                    <div class="mdc-linear-progress__buffer"></div>
+                    <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                        <span class="mdc-linear-progress__bar-inner"></span>
+                    </div>
+                    <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                        <span class="mdc-linear-progress__bar-inner"></span>
+                    </div>
+                </div>
             </button>
-        </div>
+        </form>
+        <ul class="gen__list mdc-list mdc-list--two-line">
+            <li class="mdc-list-item" tabindex="0">
 
-        <br>
-        <br>
-        <div role="progressbar" id="progress-bar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed">
-            <div class="mdc-linear-progress__buffering-dots"></div>
-            <div class="mdc-linear-progress__buffer"></div>
-            <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-                <span class="mdc-linear-progress__bar-inner"></span>
+                <svg class="gen__status-icon mdc-list-item__graphic" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" d="M0 0h24v24H0V0z" />
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z" />
+                </svg>
+                <span class="mdc-list-item__text">
+      <span class="mdc-list-item__primary-text">Verification status</span>
+                <span class="gen__status mdc-list-item__secondary-text">
+            </span>
+                </span>
+                <button class="gen__getvstart mdc-icon-button mdc-list-item__meta" title="Getting verified" aria-hidden="true" aria-pressed="true" data-mdc-auto-init="MDCRipple">
+                    <svg class="mdc-icon-button__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill="none" d="M0 0h24v24H0V0z" />
+                        <path d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z" />
+                    </svg>
+                </button>
+            </li>
+            <li class="mdc-list-item">
+                <svg class="mdc-list-item__graphic" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" d="M0 0h24v24H0V0z" />
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-.61.08-1.21.21-1.78L8.99 15v1c0 1.1.9 2 2 2v1.93C7.06 19.43 4 16.07 4 12zm13.89 5.4c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41C17.92 5.77 20 8.65 20 12c0 2.08-.81 3.98-2.11 5.4z" />
+                </svg>
+                <span class="mdc-list-item__text">
+      <span class="mdc-list-item__primary-text">Domain name</span>
+                <span class="gen__domain mdc-list-item__secondary-text"></span>
+                </span>
+                <button class="gen__copydomain mdc-icon-button mdc-list-item__meta" title="Copy to clipboard" aria-hidden="true" aria-pressed="true" data-mdc-auto-init="MDCRipple" data-clipboard-target=".gen__domain">
+                    <svg class="mdc-icon-button__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                    </svg>
+                </button>
+            </li>
+            <li class="mdc-list-item">
+                <svg class="mdc-list-item__graphic" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" d="M0 0h24v24H0V0z" />
+                    <path d="M19 15v4H5v-4h14m1-2H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zM7 18.5c-.82 0-1.5-.67-1.5-1.5s.68-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM19 5v4H5V5h14m1-2H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zM7 8.5c-.82 0-1.5-.67-1.5-1.5S6.18 5.5 7 5.5s1.5.68 1.5 1.5S7.83 8.5 7 8.5z" />
+                </svg>
+                <span class="mdc-list-item__text">
+      <span class="mdc-list-item__primary-text">Verification TXT record value</span>
+                <span class="gen__key mdc-list-item__secondary-text"></span>
+                </span>
+                <button class="gen__copykey mdc-icon-button mdc-list-item__meta" title="Copy to clipboard" aria-hidden="true" aria-pressed="true" data-mdc-auto-init="MDCRipple" data-clipboard-target=".gen__key">
+                    <svg class="mdc-icon-button__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                    </svg>
+                </button>
+            </li>
+            <li class="mdc-list-item">
+                <svg class="mdc-list-item__graphic" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path fill="none" d="M0 0h24v24H0V0z" />
+                    <path d="M7 11h2v2H7v-2zm14-5v14c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2l.01-14c0-1.1.88-2 1.99-2h1V2h2v2h8V2h2v2h1c1.1 0 2 .9 2 2zM5 8h14V6H5v2zm14 12V10H5v10h14zm-4-7h2v-2h-2v2zm-4 0h2v-2h-2v2z" />
+                </svg>
+                <span class="mdc-list-item__text">
+      <span class="mdc-list-item__primary-text">Last checked</span>
+                <span class="gen__date mdc-list-item__secondary-text"></span>
+                </span>
+                <button class="gen__copydate mdc-icon-button mdc-list-item__meta" title="Copy to clipboard" aria-hidden="true" aria-pressed="true" data-mdc-auto-init="MDCRipple" data-clipboard-target=".gen__date">
+                    <svg class="mdc-icon-button__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+                    </svg>
+                </button>
+            </li>
+        </ul>
+        <div class="gen__getvdialog mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content" data-mdc-auto-init="MDCDialog">
+            <div class="mdc-dialog__container">
+                <div class="mdc-dialog__surface">
+                    <h2 class="mdc-dialog__title" id="my-dialog-title">Getting verified</h2>
+                    <div class="mdc-dialog__content" id="my-dialog-content">
+                        In order to be verified, you need to set a TXT record for
+                        <div class="mdc-menu-surface--anchor">
+                            <code class="gen__domain gen__domain-dialog darken"></code>
+                            <div class="gen__menu-copy-domain mdc-menu mdc-menu-surface" tabindex="-1" data-mdc-auto-init="MDCMenu">
+                                <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                                    <li class="gen__dialog-copy-domain mdc-list-item" role="menuitem" data-clipboard-target=".gen__domain" data-mdc-auto-init="MDCRipple">
+                                        <span class="mdc-list-item__text">Copy to clipboard</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> with the value
+                        <div class="mdc-menu-surface--anchor">
+                            <code class="gen__key gen__key-dialog darken"></code>
+                            <div class="gen__menu-copy-key mdc-menu mdc-menu-surface" tabindex="-1" data-mdc-auto-init="MDCMenu">
+                                <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                                    <li class="gen__dialog-copy-domain mdc-list-item" role="menuitem" data-clipboard-target=".gen__key" data-mdc-auto-init="MDCRipple">
+                                        <span class="mdc-list-item__text">Copy to clipboard</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>.
+                    </div>
+                    <footer class="mdc-dialog__actions">
+                        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="ok">
+                            <span class="mdc-button__label">Close</span>
+                        </button>
+                        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="reverify">
+                            <span class="mdc-button__label">Reverify</span>
+                        </button>
+                    </footer>
+                </div>
             </div>
-            <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-                <span class="mdc-linear-progress__bar-inner"></span>
+            <div class="mdc-dialog__scrim"></div>
+        </div>
+        <div class="gen__copied mdc-snackbar mdc-snackbar--leading" data-mdc-auto-init="MDCSnackbar">
+            <div class="mdc-snackbar__surface">
+                <div class="mdc-snackbar__label" role="status" aria-live="polite">
+                    Successfully copied to clipboard
+                </div>
             </div>
         </div>
-        <p id="output" class="mdc-typography--body1"></p>
-        <h2 class="mdc-typography--headline3">API Usage</h2>
-        <h3 class="mdc-typography--headline4">Check an MD5 hash</h3>
-        <p class="mdc-typography--body1"><strong>Endpoint</strong>: <code class="code">https://script.google.com/macros/s/AKfycbyUmWUXUdGl2RlXBHtCfjBZFevt1g0UHoDbfst6ClOu5xJnuMuh/exec</code></p>
-        <p class="mdc-typography--body1">This endpoint checks if the provided MD5 hash is in the list.</p>
-        <p class="mdc-typography--body1"><strong>Type</strong>: <code class="code">GET</code></p>
-        <p class="mdc-typography--body1"><strong>Parameters</strong>:</p>
-        <p class="mdc-typography--body1"><code class="code">url</code>: The url to check.</p>
-        <p class="mdc-typography--body1"><code class="code">keyword</code>: The keyword to use when checking.</p>
-        <p class="mdc-typography--body1"><code class="code">callback</code>: An optional JSONP callback.</p>
-        <p class="mdc-typography--body1"><strong>Example output</strong>:</p>
-        <code class="code">
-{"success": true, "type": 200, "verified": false, "name": "example.com", "value": "U2FsdGVkX1/B5JpOTSL8C3EgdvRjNGSfWuIzrkNnEoA="}
-  </code>
-        <p class="mdc-typography--body1"><strong>Example failed output</strong>:</p>
-        <code class="code">
-  {"success": false, "type": 400, "message": "The url parameter was not provided."}
-  </code>
+        <div class="gen__failcopied mdc-snackbar mdc-snackbar--leading" data-mdc-auto-init="MDCSnackbar">
+            <div class="mdc-snackbar__surface">
+                <div class="mdc-snackbar__label" role="status" aria-live="polite">
+                    Failed to copy to clipboard
+                </div>
+            </div>
+        </div>
     </main>
 
-    <script async src='https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js'></script>
-    <script src='https://unpkg.com/material-components-web@0.43.1/dist/material-components-web.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js'></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+    <script src="https://unpkg.com/material-components-web@1.1.1/dist/material-components-web.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
 
     <script>
-        window.mdc.autoInit();
+        mdc.autoInit(); // For each icon button with ripples
 
-        function handleSearch() {
-            var passcode = $("#verification-keyword").val();
-            if (
-                document.getElementById("website-url").validity.valid &&
-                document.getElementById("verification-keyword").validity.valid) {
-                $("#progress-bar").removeClass("mdc-linear-progress--closed");
-                $.when(
-                    $.getJSON(
-                        "https://dns.google.com/resolve", {
-                            name: $("#website-url").val(),
-                            type: "TXT"
-                        },
-
-                        function(_ref) {
-                            var Answer = _ref.Answer;
-                            var siteverified = false;
-                            for (var i = 0; i < Answer.length; i++) {
-                                try {
-                                    if (
-                                        CryptoJS.AES.decrypt(
-                                            Answer[i].data.substring(1, Answer[i].data.length - 1).split("=")[1],
-                                            passcode).toString(CryptoJS.enc.Utf8) === $("#website-url").val()) {
-                                        siteverified = true;
-                                        break;
-                                    }
-                                } catch (error) {
-                                    console.warn(error);
-                                }
-                            }
-                            window.CP.exitedLoop(0);
-                            if (siteverified === true) {
-                                $("#output").html("<code>" +
-                                    $("#website-url").val() + "</code> is verified!");
-
-                            } else {
-                                $("#output").html("Oops!<br><code>" +
-                                    $(
-                                        "#website-url").val() + "</code> isn't verified yet.<br>Create a TXT entry in the DNS settings of <code>" + $(
-                                        "#website-url").val() + "</code> with the following settings: <br><br> Name: <code>" + $(
-                                        "#website-url").val() + "</code><br>Value: <code>" + passcode + "=" + CryptoJS.AES.encrypt(
-                                        $("#website-url").val(),
-                                        passcode) + "</code><br><br>After completing the above steps, run the test again in a few minutes.");
-
-                            }
-                        })).
-
-                then($("#progress-bar").addClass("mdc-linear-progress--closed"));
-            }
-        }
-
-        $("#website-url").on("input", function() {
-            handleSearch();
+        $(".mdc-icon-button[data-mdc-auto-init='MDCRipple']").each(function(_, _ref) {
+            var MDCRipple = _ref.MDCRipple;
+            // Fix ripples
+            MDCRipple.unbounded = true;
         });
 
-        $("#randomise-token").click(function() {
+        Array.prototype.cycle = function(str) {
+            var i = this.indexOf(str);
+            if (i === -1) return undefined;
+            return this[(i + 1) % this.length];
+        };
+
+        var handleTheme = function handleTheme() {
+            switch (localStorage.getItem("theme")) {
+                case "light":
+                    $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/>");
+                    $("body").removeClass("setting--dark");
+                    break;
+
+                case "dark":
+                    $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/>");
+                    $("body").addClass("setting--dark");
+                    break;
+
+                default:
+                    $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M11 7l-3.2 9h1.9l.7-2h3.2l.7 2h1.9L13 7h-2zm-.15 5.65L12 9l1.15 3.65h-2.3zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48z\"/>");
+                    var hours = new Date().getHours();
+                    $("body").toggleClass("setting--dark", hours <= 6 || hours >= 20 || window.matchMedia("(prefers-color-scheme: dark)").matches || window.matchMedia("(-ms-high-contrast: white-on-black)").matches);
+            }
+        };
+
+        if (["auto", "light", "dark"].indexOf(localStorage.getItem("theme")) === -1) localStorage.setItem("theme", "auto");
+        handleTheme();
+        $("body").addClass("setting--animate-colours");
+        $(".theme-toggle").click(function() {
+            localStorage.setItem("theme", ["auto", "light", "dark"].cycle(localStorage.getItem("theme")));
+            handleTheme();
+        });
+        $(".gen__form").on("submit", function(e) {
+            e.preventDefault(); // Show progress bar and disable verify button
+
+            $(".gen__verify").prop("disabled", true);
+            $(".gen__progress").get(0).MDCLinearProgress.open(); // Request TXT records
+
+            $.ajax({
+                url: "https://cloudflare-dns.com/dns-query?name=" + $(".gen__url").get(0).MDCTextField.value + "&type=TXT",
+                type: "POST",
+                headers: {
+                    "Content-Type": "application/dns-json"
+                },
+                fail: function fail() {
+                    // Hide progress bar and enable verify button
+                    $(".gen__verify").prop("disabled", false);
+                    $(".gen__progress").get(0).MDCLinearProgress.close();
+                },
+                success: function success(_ref2) {
+                    var Answer = _ref2.Answer;
+                    var verified;
+                    var record;
+                    if (Answer) $.map( // Filter out only values starting with the keyword
+                        Answer.filter(function(i) {
+                            return i.data.indexOf("\"" + $(".gen__keyword").get(0).MDCTextField.value) === 0;
+                        }),
+                        function(val) {
+                            // If the decrypted version if equal to the domain and isn't already verified
+                            if (CryptoJS.AES.decrypt(val.data.slice(1, -1).split("=")[1], $(".gen__keyword").get(0).MDCTextField.value).toString(CryptoJS.enc.Utf8) === $(".gen__url").get(0).MDCTextField.value && !verified) {
+                                // Set verified to true
+                                verified = true; // Set record used to verify
+
+                                record = val.data.slice(1, -1);
+                            }
+                        }); // Set values in list
+
+                    $(".gen__status").html(verified ? "Verified" : "Not verified");
+                    $(".gen__status-icon").html(verified ? "<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.59-12.42L10 14.17l-2.59-2.58L6 13l4 4 8-8z\"/>" : "<path opacity=\".87\" fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z\"/>");
+                    $(".gen__domain").html($(".gen__url").get(0).MDCTextField.value);
+                    $(".gen__key").html(verified ? record : $(".gen__keyword").get(0).MDCTextField.value + "=" + CryptoJS.AES.encrypt($(".gen__url").get(0).MDCTextField.value, $(".gen__keyword").get(0).MDCTextField.value));
+                    $(".gen__date").html(new Date()); // Show list
+
+                    $(".gen__list").show(); // Hide progress bar and enable verify button
+
+                    $(".gen__verify").prop("disabled", false);
+                    $(".gen__progress").get(0).MDCLinearProgress.close();
+                }
+            });
+        }); // Prepare or load saved keyword
+
+        if (localStorage.getItem("rdv-keyword")) $(".gen__keyword").get(0).MDCTextField.value = localStorage.getItem("rdv-keyword");
+        else localStorage.setItem("rdv-keyword", $(".gen__keyword").get(0).MDCTextField.value); // Autosave keyword changes
+
+        $(".gen__keyword input").on("input", function() {
+            return localStorage.setItem("rdv-keyword", $(".gen__keyword").get(0).MDCTextField.value);
+        }); // Random string generator
+
+        var randomString = function randomString(len, possible) {
+            if (possible === void 0) {
+                possible = "abcdefghijklmnopqrstuvwxyz";
+            }
+
             var text = "";
-            var possible = "abcdefghijklmnopqrstuvwxyz";
-            for (var i = 0; i < 20; i++) {
+
+            for (var i = 0; i < len; i++) {
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
             }
-            window.CP.exitedLoop(1);
-            document.getElementById("verification-keyword-div").MDCTextField.value = text;
-            handleSearch();
-        });
+
+            return text;
+        }; // Generate random verification keyword when generate buton clicked
+
+        $(".gen__genkeyword").click(function() {
+            $(".gen__keyword").get(0).MDCTextField.value = randomString(20);
+            $(".gen__keyword input").trigger("input");
+        }); // Open getting verified dialog when help button clicked
+
+        $(".gen__getvstart").click(function() {
+            return $(".gen__getvdialog").get(0).MDCDialog.open();
+        }); // Listen for dialog closing
+
+        $(".gen__getvdialog").get(0).MDCDialog.listen("MDCDialog:closing", function(_ref3) {
+            var detail = _ref3.detail;
+            if (detail.action === "reverify") $(".gen__verify").click();
+        }); // Copy to clipboard setup function
+
+        var setupCopy = function setupCopy(el) {
+            var clipboard = new ClipboardJS(el);
+            clipboard.on("success", function(e) {
+                $(".gen__copied").get(0).MDCSnackbar.open();
+                e.clearSelection();
+            });
+            clipboard.on("error", function(e) {
+                $(".gen__failcopied").get(0).MDCSnackbar.open();
+                e.clearSelection();
+            });
+        }; // Setup menu and copy to clipboard function
+
+        var setupCopyMenu = function setupCopyMenu(menu, region, copy) {
+            $(region).on("contextmenu", function(e) {
+                e.preventDefault();
+                $(menu).get(0).MDCMenu.open = true;
+            });
+            setupCopy(copy);
+        }; // Setup copy to clipboard and right click option
+
+        setupCopyMenu(".gen__menu-copy-domain", ".gen__domain-dialog", ".gen__dialog-copy-domain");
+        setupCopyMenu(".gen__menu-copy-key", ".gen__key-dialog", ".gen__dialog-copy-key"); // Setup copy to clipboard buttons
+
+        setupCopy(".gen__copydomain");
+        setupCopy(".gen__copykey");
+        setupCopy(".gen__copydate");
+        setupCopy(".gen__dialogcopydomain");
     </script>
 
 </body>
