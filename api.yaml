@@ -1,0 +1,89 @@
+paths:
+  /:
+    get:
+      operationId: 'Lookup domain'
+      summary: 'Lookup the verification status associated with the domain.'
+      responses:
+        '200':
+          description: 'Regular response.'
+          schema:
+            x-oad-type: object
+            type: object
+            properties:
+              success:
+                x-oad-type: boolean
+                type: boolean
+                title: 'If the request succeeded'
+                readOnly: true
+              type:
+                x-oad-type: integer
+                type: integer
+                title: 'The HTTP-like response code'
+                format: int32
+                default: 200
+                readOnly: true
+              verified:
+                x-oad-type: boolean
+                type: boolean
+                title: 'If the website is verified'
+                readOnly: true
+              name:
+                x-oad-type: string
+                type: string
+                title: 'The domain that was just verified'
+                readOnly: true
+              value:
+                x-oad-type: string
+                type: string
+                title: 'The value of the verification TXT record that was or should be set'
+                readOnly: true
+              message:
+                x-oad-type: string
+                type: string
+                title: 'An error message if one exists'
+                readOnly: true
+          x-oad-type: response
+      parameters:
+        -
+          name: url
+          in: query
+          description: 'The domain to check.'
+          required: true
+          type: string
+          x-oad-type: parameter
+        -
+          name: keyword
+          in: query
+          description: 'The keyword to use when checking for the verification status. Defaults to "ros-domain-verification".'
+          required: false
+          type: string
+          x-oad-type: parameter
+        -
+          name: callback
+          in: query
+          description: 'An optional jsonp callback.'
+          required: false
+          type: string
+          x-oad-type: parameter
+    x-oad-type: operation
+info:
+  title: 'ROS Domain Verification'
+  version: 1.0.0
+  description: 'This is an easy way to prove that you own a domain by adding a TXT record to your website''s DNS records.'
+  termsOfService: 'https://docs.google.com/document/d/1VdujSYPVONr13Au0t4HNCC_7xK4v-eGMS3_AHCDPFdc/edit?usp=sharing'
+  contact:
+    name: 'Richie Bendall'
+    email: richiebendall@gmail.com
+    url: 'https://richienb.github.io'
+  license:
+    name: MIT
+    url: 'https://mit-license.org'
+host: script.google.com
+basePath: /macros/s/AKfycbyUmWUXUdGl2RlXBHtCfjBZFevt1g0UHoDbfst6ClOu5xJnuMuh/exec
+schemes:
+  - https
+consumes:
+  - application/x-www-form-urlencoded
+produces:
+  - application/json
+swagger: '2.0'
