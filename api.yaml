@@ -1,5 +1,5 @@
 paths:
-  /:
+  /exec:
     get:
       operationId: 'Lookup domain'
       summary: 'Lookup the verification status associated with the domain.'
@@ -79,7 +79,7 @@ info:
     name: MIT
     url: 'https://mit-license.org'
 host: script.google.com
-basePath: /macros/s/AKfycbyUmWUXUdGl2RlXBHtCfjBZFevt1g0UHoDbfst6ClOu5xJnuMuh/exec
+basePath: /macros/s/AKfycbyUmWUXUdGl2RlXBHtCfjBZFevt1g0UHoDbfst6ClOu5xJnuMuh
 schemes:
   - https
 consumes:
