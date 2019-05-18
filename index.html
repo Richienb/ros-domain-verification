@@ -276,11 +276,11 @@
         <p class="mdc-typography--body1">This is an easy way to prove that you own a domain by adding a TXT record to your website's DNS records.</p>
         <form class="gen__form" action="#" autocomplete="off">
             <div class="gen__url mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
-                <input type="text" pattern="^(?!https?).+$" id="tf-outlined-a" class="mdc-text-field__input" required>
+                <input type="text" pattern="(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)" id="tf-outlined-a" class="mdc-text-field__input" required>
                 <div class="mdc-notched-outline">
                     <div class="mdc-notched-outline__leading"></div>
                     <div class="mdc-notched-outline__notch">
-                        <label for="tf-outlined-a" class="mdc-floating-label">Website URL</label>
+                        <label for="tf-outlined-a" class="mdc-floating-label">Website Domain</label>
                     </div>
                     <div class="mdc-notched-outline__trailing"></div>
                 </div>
